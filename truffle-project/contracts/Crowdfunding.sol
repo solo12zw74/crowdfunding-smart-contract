@@ -24,6 +24,19 @@ contract Crowdfunding {
     // current campaign state
     State public state;
 
+    constructor(
+        string memory _name,
+        uint _targetAmountEth,
+        uint _durationInMin,
+        address payable _beneficiaryAddress
+    ) {
+        name = _name;
+        targetAmount = _targetAmountEth * 1 ether;
+        fundingDeadline = currentTime() + _durationInMin * 1 minutes;
+        beneficiary = _beneficiaryAddress;
+        state = State.Ongoing;
+    }
+
     function currentTime() private view returns (uint) {
         return block.timestamp;
     }

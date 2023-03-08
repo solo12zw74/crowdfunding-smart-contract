@@ -30,7 +30,12 @@ contract Crowdfunding {
     // flag for define if campaign achieves the goal
     bool public collected;
 
-    constructor( 
+    modifier inState(State expectedState) {
+        require(expectedState == state, "Incorrect campaign state");
+        _;
+    }
+
+    constructor(
         string memory _name,
         uint _targetAmountEth,
         uint _durationInMin,

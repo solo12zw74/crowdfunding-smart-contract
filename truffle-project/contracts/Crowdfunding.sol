@@ -24,7 +24,13 @@ contract Crowdfunding {
     // current campaign state
     State public state;
 
-    constructor(
+    // keeps the dictionary of all contributors acontributions
+    mapping(address => uint) public amounts;
+
+    // flag for define if campaign achieves the goal
+    bool public collected;
+
+    constructor( 
         string memory _name,
         uint _targetAmountEth,
         uint _durationInMin,

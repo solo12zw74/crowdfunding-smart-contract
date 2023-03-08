@@ -2,24 +2,29 @@
 pragma solidity >=0.4.22 <0.9.0;
 
 contract Crowdfunding {
-  enum State { Ongoing, Failed, Succeded, PaidOut }
-  
-  // declare the deployed contract name
-  string public name;
+    enum State {
+        Ongoing,
+        Failed,
+        Succeded,
+        PaidOut
+    }
 
-  // the funding campaign amount goal
-  uint public targetAmount;
+    // declare the deployed contract name
+    string public name;
 
-  // keep the date till which the campaign is valid
-  uint public fundingDeadline;
+    // the funding campaign amount goal
+    uint public targetAmount;
 
-  // where to send the funds if campaign is succeded
-  address payable public beneficiary;
+    // keep the date till which the campaign is valid
+    uint public fundingDeadline;
 
-  // current campaign state
-  State public state;
+    // where to send the funds if campaign is succeded
+    address payable public beneficiary;
 
-  function currentTime() private view returns(uint) {
-    return block.timestamp;
-  }
+    // current campaign state
+    State public state;
+
+    function currentTime() private view returns (uint) {
+        return block.timestamp;
+    }
 }

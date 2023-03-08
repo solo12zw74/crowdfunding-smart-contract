@@ -9,7 +9,7 @@ contract("Crowdfunding", function (accounts) {
   let crowdfunding
   const beneficiary = accounts[0]
 
-  const ONE_ETH = web3.eth.toWei('1', 'ether')
+  const ONE_ETH = web3.utils.toWei('1', 'ether')
   const ONGOING_STATE = '0'
   const FAILED_STATE = '1'
   const SUCCEDE_STATED = '2'
@@ -24,7 +24,17 @@ contract("Crowdfunding", function (accounts) {
       { from: beneficiary, gas: 2000000 })
   })
 
-  it("should assert true", async function () {
+  it("contract is initialized", async function () {
+    const targetAmount = await crowdfunding.targetAmount()
+    expect(targetAmount.toString()).to.equal(ONE_ETH.toString())
 
+    const actualName = await crowdfunding.name()
+    expect(actualName).to.equal('campaign name')
+
+    const actualBeneficiary = await crowdfunding.beneficiary()
+    expect(actualBeneficiary).to.equal(beneficiary)
+    
+    const actualState = await crowdfunding.state()
+    expect(actualState.toString()).to.equal(ONGOING_STATE)
   });
 });

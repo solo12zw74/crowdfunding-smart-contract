@@ -33,8 +33,18 @@ contract("Crowdfunding", function (accounts) {
 
     const actualBeneficiary = await crowdfunding.beneficiary()
     expect(actualBeneficiary).to.equal(beneficiary)
-    
+
     const actualState = await crowdfunding.state()
     expect(actualState.toString()).to.equal(ONGOING_STATE)
+  });
+
+  it("accepts ETH contributions", async function () {
+    await crowdfunding.sendTransaction({ value: ONE_ETH, from: accounts[1] })
+
+    const contributed = await crowdfunding.amounts(accounts[1])
+    expect(contributed.toString()).to.equal(ONE_ETH.toString())
+
+    const actualContributed = await crowdfunding.totalCollected()
+    expect(actualContributed.toString()).to.equal(ONE_ETH.toString())
   });
 });

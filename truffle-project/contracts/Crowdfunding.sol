@@ -18,4 +18,8 @@ contract Crowdfunding {
 
   // current campaign state
   State public state;
+
+  function currentTime() private view returns(uint) {
+    return block.timestamp;
+  }
 }

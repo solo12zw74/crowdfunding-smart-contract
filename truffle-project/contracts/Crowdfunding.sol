@@ -48,6 +48,18 @@ contract Crowdfunding {
         state = State.Ongoing;
     }
 
+    receive() external payable inState(State.Ongoing) {
+        amounts[msg.sender] += msg.value;
+
+        if (targetAmount <= totalCollected()) {
+            collected = true;
+        }
+    }
+
+    function totalCollected() public view returns (uint) {
+        return address(this).balance;
+    }
+
     function currentTime() private view returns (uint) {
         return block.timestamp;
     }

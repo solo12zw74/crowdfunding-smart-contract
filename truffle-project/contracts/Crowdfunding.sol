@@ -63,4 +63,12 @@ contract Crowdfunding {
     function currentTime() private view returns (uint) {
         return block.timestamp;
     }
+
+    function beforeDeadline() public view returns (bool) {
+        return currentTime() < fundingDeadline;
+    }
+
+    function afterDeadline() internal view returns (bool) {
+        return !beforeDeadline();
+    }
 }

@@ -48,6 +48,26 @@ contract("Crowdfunding", function (accounts) {
     expect(actualContributed.toString()).to.equal(ONE_ETH.toString())
   })
 
+  it("doesnt allow to contribute after deadline", async function(){
+    try{
+      await increaseTime(601)
+      await mineBlock()
+      await crowdfunding.sendTransaction({value: ONE_ETH, from: accounts[1]})
+
+      expect.fail('Should revert execution')
+    } catch(error) {
+      expect(error.message).to.include('Deadline has passed')
+    }
+  })
+
+  it("sets state correctly when campaign fails", async function(){
+    await increaseTime(601)
+    await mineBlock()
+    await crowdfunding.finishCrowdfunding()
+    var actualState = await crowdfunding.state()
+    expect(actualState.toString()).to.equal(FAILED_STATE)
+  })
+
   async function increaseTime(increaseBySec) {
     return new Promise((resolve, reject) => {
       web3.currentProvider.send({

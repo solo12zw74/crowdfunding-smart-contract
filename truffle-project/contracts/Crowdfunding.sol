@@ -49,6 +49,7 @@ contract Crowdfunding {
     }
 
     receive() external payable inState(State.Ongoing) {
+        require(beforeDeadline(), "Deadline has passed");
         amounts[msg.sender] += msg.value;
 
         if (targetAmount <= totalCollected()) {

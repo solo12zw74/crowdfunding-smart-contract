@@ -56,6 +56,16 @@ contract Crowdfunding {
         }
     }
 
+    function finishCrowdfunding() public inState(State.Ongoing) {
+        require(afterDeadline(), "Deadline has not passed");
+
+        if (!collected) {
+            state = State.Failed;
+        } else {
+            state = State.Succeded;
+        }
+    }
+
     function totalCollected() public view returns (uint) {
         return address(this).balance;
     }

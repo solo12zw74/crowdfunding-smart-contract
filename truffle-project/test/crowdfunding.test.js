@@ -46,5 +46,41 @@ contract("Crowdfunding", function (accounts) {
 
     const actualContributed = await crowdfunding.totalCollected()
     expect(actualContributed.toString()).to.equal(ONE_ETH.toString())
-  });
+  })
+
+  async function increaseTime(increaseBySec) {
+    return new Promise((resolve, reject) => {
+      web3.currentProvider.send({
+        jsonrpc: '2.0',
+        method: 'evm_increaseTime',
+        params: [increaseBySec]
+      },
+        (error, result) => {
+          if (error) {
+            reject(error)
+            return
+          }
+          resolve(result)
+        })
+
+    })
+  }
+
+  async function mineBlock() {
+    return new Promise((resolve, reject) => {
+      web3.currentProvider.send(
+        {
+          jsonrpc: '2.0',
+          method: 'evm_mine'
+        },
+        (error, result) => {
+          if (error){
+            reject(error)
+            return
+          }
+
+          resolve(result)
+        })
+    })
+  }
 });

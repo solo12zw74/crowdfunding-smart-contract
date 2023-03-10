@@ -77,6 +77,38 @@ contract("Crowdfunding", function (accounts) {
     expect(actualState.toString()).to.equal(SUCCEDE_STATED)
   })
 
+  it("allows to collect money from the campaign", async function(){
+    await crowdfunding.sendTransaction({value: ONE_ETH, from: accounts[1]})
+    await increaseTime(601)
+    await mineBlock()
+    await crowdfunding.finishCrowdfunding()
+
+    const initAmount = await web3.eth.getBalance(beneficiary)
+    await crowdfunding.collect({from: accounts[1]})
+
+    const newBalance = await web3.eth.getBalance(beneficiary)
+    
+    var campaignResult = newBalance - initAmount;
+    expect(campaignResult.toString()).to.equal(ONE_ETH)
+  })
+
+  it("refund money if campaign failed", async function(){
+    const initAmount = await web3.eth.getBalance(accounts[1])
+    
+    await crowdfunding.sendTransaction({value: ONE_ETH - 100, from: accounts[1]})
+    await increaseTime(601)
+    await mineBlock()
+    await crowdfunding.finishCrowdfunding()
+
+    const actualState = await crowdfunding.state()
+    expect(actualState.toString()).to.equal(FAILED_STATE)
+
+    await crowdfunding.withdraw({from: accounts[1]})
+
+    const finalBalance = await crowdfunding.totalCollected()
+    expect(finalBalance.toString()).to.equal('0')
+  })
+
   async function increaseTime(increaseBySec) {
     return new Promise((resolve, reject) => {
       web3.currentProvider.send({

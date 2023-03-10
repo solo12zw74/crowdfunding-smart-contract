@@ -9,6 +9,8 @@ contract Crowdfunding {
         PaidOut
     }
 
+    event CampaignFinished(address addr, uint totalCollected, bool isSucceeded);
+
     // declare the deployed contract name
     string public name;
 
@@ -65,6 +67,8 @@ contract Crowdfunding {
         } else {
             state = State.Succeded;
         }
+
+        emit CampaignFinished(address(this), totalCollected(), collected);
     }
 
     function collect() public inState(State.Succeded) {

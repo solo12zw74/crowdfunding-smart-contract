@@ -48,19 +48,19 @@ contract("Crowdfunding", function (accounts) {
     expect(actualContributed.toString()).to.equal(ONE_ETH.toString())
   })
 
-  it("doesnt allow to contribute after deadline", async function(){
-    try{
+  it("doesnt allow to contribute after deadline", async function () {
+    try {
       await increaseTime(601)
       await mineBlock()
-      await crowdfunding.sendTransaction({value: ONE_ETH, from: accounts[1]})
+      await crowdfunding.sendTransaction({ value: ONE_ETH, from: accounts[1] })
 
       expect.fail('Should revert execution')
-    } catch(error) {
+    } catch (error) {
       expect(error.message).to.include('Deadline has passed')
     }
   })
 
-  it("sets state correctly when campaign fails", async function(){
+  it("sets state correctly when campaign fails", async function () {
     await increaseTime(601)
     await mineBlock()
     await crowdfunding.finishCrowdfunding()
@@ -68,8 +68,8 @@ contract("Crowdfunding", function (accounts) {
     expect(actualState.toString()).to.equal(FAILED_STATE)
   })
 
-  it("sets state correctly when campaign succeeds", async function(){
-    await crowdfunding.sendTransaction({value: ONE_ETH, from: accounts[1]})
+  it("sets state correctly when campaign succeeds", async function () {
+    await crowdfunding.sendTransaction({ value: ONE_ETH, from: accounts[1] })
     await increaseTime(601)
     await mineBlock()
     await crowdfunding.finishCrowdfunding()
@@ -77,25 +77,25 @@ contract("Crowdfunding", function (accounts) {
     expect(actualState.toString()).to.equal(SUCCEDE_STATED)
   })
 
-  it("allows to collect money from the campaign", async function(){
-    await crowdfunding.sendTransaction({value: ONE_ETH, from: accounts[1]})
+  it("allows to collect money from the campaign", async function () {
+    await crowdfunding.sendTransaction({ value: ONE_ETH, from: accounts[1] })
     await increaseTime(601)
     await mineBlock()
     await crowdfunding.finishCrowdfunding()
 
     const initAmount = await web3.eth.getBalance(beneficiary)
-    await crowdfunding.collect({from: accounts[1]})
+    await crowdfunding.collect({ from: accounts[1] })
 
     const newBalance = await web3.eth.getBalance(beneficiary)
-    
+
     var campaignResult = newBalance - initAmount;
     expect(campaignResult.toString()).to.equal(ONE_ETH)
   })
 
-  it("refund money if campaign failed", async function(){
+  it("refund money if campaign failed", async function () {
     const initAmount = await web3.eth.getBalance(accounts[1])
-    
-    await crowdfunding.sendTransaction({value: ONE_ETH - 100, from: accounts[1]})
+
+    await crowdfunding.sendTransaction({ value: ONE_ETH - 100, from: accounts[1] })
     await increaseTime(601)
     await mineBlock()
     await crowdfunding.finishCrowdfunding()
@@ -103,10 +103,27 @@ contract("Crowdfunding", function (accounts) {
     const actualState = await crowdfunding.state()
     expect(actualState.toString()).to.equal(FAILED_STATE)
 
-    await crowdfunding.withdraw({from: accounts[1]})
+    await crowdfunding.withdraw({ from: accounts[1] })
 
     const finalBalance = await crowdfunding.totalCollected()
     expect(finalBalance.toString()).to.equal('0')
+  })
+
+  it("emits an event state when campaign is finished", async function () {
+    await increaseTime(601)
+    await mineBlock()
+
+    const receipt = await crowdfunding.finishCrowdfunding()
+    expect(receipt.logs).to.have.lengthOf(1)
+
+    const campaignFinisedEvent = receipt.logs[0]
+    expect(campaignFinisedEvent.event).to.equal("CampaignFinished")
+
+    const eventArgs = campaignFinisedEvent.args
+
+    expect(eventArgs.addr).to.equal(crowdfunding.address)
+    expect(eventArgs.totalCollected.toString()).to.equal('0')
+    expect(eventArgs.isSucceeded).to.equal(false)
   })
 
   async function increaseTime(increaseBySec) {
@@ -135,7 +152,7 @@ contract("Crowdfunding", function (accounts) {
           method: 'evm_mine'
         },
         (error, result) => {
-          if (error){
+          if (error) {
             reject(error)
             return
           }

@@ -68,6 +68,15 @@ contract("Crowdfunding", function (accounts) {
     expect(actualState.toString()).to.equal(FAILED_STATE)
   })
 
+  it("sets state correctly when campaign succeeds", async function(){
+    await crowdfunding.sendTransaction({value: ONE_ETH, from: accounts[1]})
+    await increaseTime(601)
+    await mineBlock()
+    await crowdfunding.finishCrowdfunding()
+    var actualState = await crowdfunding.state()
+    expect(actualState.toString()).to.equal(SUCCEDE_STATED)
+  })
+
   async function increaseTime(increaseBySec) {
     return new Promise((resolve, reject) => {
       web3.currentProvider.send({

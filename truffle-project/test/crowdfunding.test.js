@@ -126,6 +126,21 @@ contract("Crowdfunding", function (accounts) {
     expect(eventArgs.isSucceeded).to.equal(false)
   })
 
+  it("allow owner to cancel the campaign", async function () {
+    await crowdfunding.cancelCrowdfunding({ from: beneficiary })
+    var actualState = await crowdfunding.state()
+    expect(actualState.toString()).to.equal(FAILED_STATE)
+  })
+
+  it("doesnt allow non-owner to cancel the campaign", async function () {
+    try {
+      await crowdfunding.cancelCrowdfunding({ from: accounts[1] })
+      expect.fail("Should revert transaction")
+    } catch (error) {
+      expect(error.message).to.include("caller is not the owner")
+    }
+  })
+
   async function increaseTime(increaseBySec) {
     return new Promise((resolve, reject) => {
       web3.currentProvider.send({

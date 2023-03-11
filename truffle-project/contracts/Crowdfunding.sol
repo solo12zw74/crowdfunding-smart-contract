@@ -6,7 +6,7 @@ import "./Utils.sol";
 
 contract Crowdfunding is Ownable {
     using Utils for uint;
-    
+
     enum State {
         Ongoing,
         Failed,
@@ -49,8 +49,8 @@ contract Crowdfunding is Ownable {
         address payable _beneficiaryAddress
     ) {
         name = _name;
-        targetAmount = _targetAmountEth * 1 ether;
-        fundingDeadline = currentTime() + _durationInMin * 1 minutes;
+        targetAmount = _targetAmountEth.etherToWei();
+        fundingDeadline = currentTime() + _durationInMin.minutesToSeconds();
         beneficiary = _beneficiaryAddress;
         state = State.Ongoing;
         transferOwnership(beneficiary);

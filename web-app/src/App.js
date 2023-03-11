@@ -1,24 +1,27 @@
 import logo from './logo.svg';
-import './App.css';
+import './App.css'
+import React from 'react'
+import { Routes, Router, useNavigation } from 'react-router-dom'
+import Campaign from './components/Campaign'
+import { Container, Menu } from 'semantic-ui-react'
+import Home from 'components/Home'
+import NotFound from 'components/NotFound'
+
+import { useNavigate } from 'react-router-dom';
 
 function App() {
+  let navigate = useNavigation()
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container>
+      <Menu secondary>
+        <Menu.Item name='home' onClick={() => navigate('/')} />
+      </Menu>
+      <Routes>
+        <Route path = '/' element={<Home />}/>
+        <Route path = '/campaign/:address' element={<Campaign />}/>
+        <Route path = '*' element={<NotFound />}/>
+      </Routes>
+    </Container>
   );
 }
 

@@ -1,0 +1,8 @@
+import ContributeInput from './ContributeInput'
+import SucceededStateInput from './SucceededStateInput'
+import FailedStateInput from './FailedStateInput'
+
+
+export default function Campaign(){
+
+}

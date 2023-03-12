@@ -79,12 +79,12 @@ export default function Campaign() {
 
                 setContractInfo({
                     name: name,
-                    targetAmount: targetAmount,
+                    targetAmount: web3.utils.fromWei(targetAmount),
                     totalCollected: totalCollected,
                     campaignFinished: !beforeDeadline,
                     deadline: deadlineDate,
                     isBeneficiary: beneficiary.toLowerCase() === currentAccount.toLowerCase(),
-                    contributedAmount: contributedAmount,
+                    contributedAmount: web3.utils.fromWei(contributedAmount),
                     state: state
                 })
             } catch (e) {
@@ -132,7 +132,7 @@ export default function Campaign() {
 
             <Table.Row>
                 <Table.Cell>Target amount</Table.Cell>
-                <Table.Cell>{contractInfo.targetAmount}</Table.Cell>
+                <Table.Cell>{contractInfo.targetAmount} ETH</Table.Cell>
             </Table.Row>
 
             <Table.Row>
@@ -152,7 +152,7 @@ export default function Campaign() {
 
             <Table.Row>
                 <Table.Cell>Contributed amount</Table.Cell>
-                <Table.Cell>{contractInfo.contributedAmount.toString()}</Table.Cell>
+                <Table.Cell>{contractInfo.contributedAmount} ETH</Table.Cell>
             </Table.Row>
 
             <Table.Row>

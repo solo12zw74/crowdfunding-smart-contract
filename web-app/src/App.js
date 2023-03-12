@@ -18,7 +18,7 @@ function App() {
       </Menu>
       <Routes>
         <Route path = '/' element={<Home />}/>
-        <Route path = '/campaign/:address' element={<Campaign />}/>
+        <Route path = '/campaigns/:address' element={<Campaign />}/>
         <Route path = '*' element={<NotFound />}/>
       </Routes>
     </Container>

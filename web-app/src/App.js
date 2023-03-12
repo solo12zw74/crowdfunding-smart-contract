@@ -1,16 +1,16 @@
 import logo from './logo.svg';
 import './App.css'
 import React from 'react'
-import { Routes, Router, useNavigation } from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
 import Campaign from './components/Campaign'
 import { Container, Menu } from 'semantic-ui-react'
-import Home from 'components/Home'
-import NotFound from 'components/NotFound'
+import Home from './components/Home'
+import NotFound from './components/NotFound'
 
 import { useNavigate } from 'react-router-dom';
 
 function App() {
-  let navigate = useNavigation()
+  let navigate = useNavigate()
   return (
     <Container>
       <Menu secondary>
